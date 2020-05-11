@@ -59,9 +59,9 @@ const getTales = async (url) => {
     promises.push(promise);
   }
 
-  return Promise.all(promises).then((res) => {
+  Promise.all(promises).then((res) => {
     fanfictionData.story = res;
-
-    console.log(fanfictionData);
   });
+
+  return fanfictionData;
 }
