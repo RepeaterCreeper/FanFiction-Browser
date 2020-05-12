@@ -1,19 +1,69 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Tales</title>
-    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-  </head>
-  <body>
-    <script src="./renderer/tales.js"></script>
-    <script>
-      let fanfictionObject = getTales("https://www.fanfiction.net/s/7472486/");
 
-      fanfictionObject.then((response) => {
-        console.log(response);
-      })
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>FanFiction Browser</title>
+  <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+  <link rel="stylesheet" type="text/css" href="./css/main.css" />
+  <link rel="stylesheet" type="text/css" href="./css/materialize.css" />
+
+  <style>
+    .action-bar:hover {
+      transition: 1s ease;
+      opacity: 1;
+    }
+
+    .action-bar {
+      display: flex;
+      opacity: 0;
+      justify-content: space-evenly;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: auto;
+      padding: 8px;
+    }
+
+    .tales__tags {
+      padding: 4px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card hoverable" style="margin: 8px; cursor: pointer;">
+    <div class="card-content" style="padding: 0; position: relative;">
+      <div class="action-bar">
+        <button class="btn waves-effect blue" style="margin: 0 4px;"><i class="material-icons white-text">favorite_border</i></button>
+        <button class="btn waves-effect grey" style="margin: 0 4px;"><i class="material-icons white-text">archive</i></button>
+        <button class="btn waves-effect purple" style="margin: 0 4px;"><i class="material-icons white-text">rate_review</i></button>
+      </div>
+      <div class="row" style="margin-bottom: 0; display: flex;">
+        <div class="col" style="display: flex; justify-content: center; align-items: center; padding: 4px;">
+          <img src="https://ff74.b-cdn.net/image/4504821/75/" style="border-style: double;">
+        </div>
+        <div class="col" style="padding: 4px;">
+          <p><b>A Nosy Yukinoshita</b></p>
+          <p><small>by: <span class="blue white-text" style="padding: 4px;">Some Random Author</span></small></p>
+          <p style="max-height: 64px; overflow: hidden;">Description</p>
+        </div>
+      </div>
+    </div>
+    <div class="card-action">
+      <span class="red darken-2 white-text tales__tags">New</span>
+    </div>
+  </div>
+  <script src="./js/materialize.min.js"></script>
+  <script src="./renderer/tales.js"></script>
+  <script>
+    //let fanfictionObject = getTales("https://www.fanfiction.net/s/7472486/");
+  </script>
+</body>
+
 </html>
