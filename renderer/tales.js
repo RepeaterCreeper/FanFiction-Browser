@@ -1,12 +1,15 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 
-
+const init = () => {
+  document.addEventListener('DOMContentLoaded', function() {
+    M.AutoInit();
+  });
+}
 /**
  * Retrieve FanFiction
  * @param {string} url - Url of the FanFiction
  */
-
 const getTales = async (url) => {
   let promises = [];
 
@@ -65,3 +68,5 @@ const getTales = async (url) => {
 
   return fanfictionData;
 }
+
+init();
