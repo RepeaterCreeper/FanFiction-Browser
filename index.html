@@ -33,11 +33,41 @@
       padding: 4px;
       border-radius: 4px;
     }
+
+    div[data-content-id='storycontent'] p {
+      margin: 16px 0 !important;
+    }
   </style>
 </head>
 
 <body>
-  <div class="card hoverable" style="margin: 8px; cursor: pointer;">
+  <nav>
+    <div class="nav-wrapper purple darken-4">
+      <a href="#" data-target="main-nav" class="sidenav-trigger fixed"><i class="material-icons">menu</i></a>
+      <ul class="right">
+        <li class="disabled"><a href="#"><i class="material-icons">chevron_left</i></a></li>
+        <li><a href="#"><i class="material-icons">chevron_right</i></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <ul class="sidenav" id="main-nav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background: linear-gradient(to right, #000428, #004e92);"></div>
+        <a href="#user"><img class="circle" src="./img/avatar.png"></a>
+        <a href="#name"><span class="white-text name">RepeaterCreeper</span></a>
+        <a href="#email"><span class="white-text email">RepeaterCreeper@gmail.com</span></a>
+      </div>
+    </li>
+    <li><a href="/dashboard "><i class="material-icons">dashboard</i> Dashboard</a></li>
+    <li><a href="/download"><i class="material-icons">archive</i> Archives</a></li>
+    <li><a href="/dashboard "><i class="material-icons">dashboard</i> Dashboard</a></li>
+    <li class="divider"></li>
+    <li><a href="#about "><i class="material-icons">info</i> About</a></li>
+
+  </ul>
+  <!-- <div class="card hoverable" style="margin: 8px; cursor: pointer;">
     <div class="card-content" style="padding: 0; position: relative;">
       <div class="action-bar">
         <button class="btn waves-effect blue" style="margin: 0 4px;"><i class="material-icons white-text">favorite_border</i></button>
@@ -58,10 +88,80 @@
     <div class="card-action">
       <span class="red darken-2 white-text tales__tags">New</span>
     </div>
+  </div>-->
+  <div class="row">
+    <div class="col s12 l10">
+      <div class="card">
+        <div class="card-content" data-content-id="storycontent"></div>
+      </div>
+    </div>
+    <div class="col l2 hide-on-med-and-down">
+      <div class="card">
+        <div class="card-content">
+          <button class="btn waves-effect green" onclick="openDialog()">Open FanFiction</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <script src="./js/materialize.min.js"></script>
+
+  <script src="./js/materialize.js"></script>
   <script src="./renderer/tales.js"></script>
   <script>
+    const { dialog } = require("electron").remote;
+    const fs = require("fs");
+    const $ = require("jquery");
+
+    const ffObject = {};
+
+    function openDialog() {
+      dialog.showOpenDialog({
+        properties: ["openDirectory"]
+      }).then((res) => {
+        let files = fs.readdirSync(res.filePaths[0]).sort((a, b) => {
+          let numberA = parseInt(a.split(".")[0].split("_")[1]),
+            numberB = parseInt(b.split(".")[0].split("_")[1]);
+
+          if (numberA > numberB) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+
+        let promises = []
+
+        fs.readdir(res.filePaths[0], (err, files) => {
+          if (err) throw err;
+
+          let promises = [];
+
+          for (let file of files) {
+            promises.push(new Promise((resolve, reject) => {
+              fs.readFile(`${res.filePaths[0]}/${file}`, "utf-8", (err, data) => {
+                if (err) throw err;
+
+                let chapter = file.split("_")[1];
+
+                chapterObject = {
+                  chapter: chapter,
+                  content: data
+                }
+
+                resolve(chapterObject);
+              })
+            }));
+          }
+
+          Promise.all(promises).then((res) => {
+            ffObject["story"] = res;
+
+            $("div[data-content-id='storycontent']").append(ffObject["story"][0].content);
+          })
+        });
+        
+      });
+    }
+    
     //let fanfictionObject = getTales("https://www.fanfiction.net/s/7472486/");
   </script>
 </body>
